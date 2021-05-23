@@ -1,0 +1,125 @@
+<form [formGroup]="userFormGroup" (ngSubmit)="onSubmit()">
+	<div class="container">
+		<ng-container *ngIf="showSuccess">
+			<div class="alert alert-success alert-dismissible fade show" role="alert">
+				You have submitted your notification information successfully!
+				<button type="button" class="btn-close" (click)="showSuccess = false"></button>
+			</div>
+		</ng-container>
+		<ng-container *ngIf="showFail">
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				It looks like you have some errors.
+				<button type="button" class="btn-close" (click)="showFail = false"></button>
+			</div>
+		</ng-container>
+		<div class="row">
+			<div class="form-group col-md-6 col-sm-12">
+				<label class="control-label" for="firstName">First Name * </label>
+				<input class="form-control" name="firstName" id="firstName" type="text" maxlength="30"
+					formControlName="firstName" />
+				<div *ngIf="firstName?.invalid && (submitted || firstName?.touched)">
+					<div class="validation-text" *ngIf="firstName?.errors?.required">
+						First name is required.
+					</div>
+					<div class="validation-text" *ngIf="firstName?.errors?.pattern">
+						First name must be alphabetical characters only.
+					</div>
+					<div class="validation-text" *ngIf="firstName?.errors?.maxLength">
+						First name must be 30 characters or less.
+					</div>
+				</div>
+			</div>
+			<div class="form-group col-md-6 col-sm-12">
+				<label class="control-label" for="lastName">Last Name * </label>
+				<input class="form-control" name="lastName" id="lastName" type="text" maxlength="30"
+					formControlName="lastName" />
+				<div *ngIf="lastName?.invalid && (submitted || lastName?.touched)">
+					<div class="validation-text" *ngIf="lastName?.errors?.required">
+						Last name is required.
+					</div>
+					<div class="validation-text" *ngIf="lastName?.errors?.pattern">
+						Last name must be alphabetical characters only.
+					</div>
+					<div class="validation-text" *ngIf="lastName?.errors?.maxLength">
+						Last name must be 30 characters or less.
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div>How would you prefer to be nofitified? *</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-md-6 col-sm-12">
+				<input class="form-check-input" name="emailCheckbox" id="emailCheckbox" type="checkbox"
+					(click)="checkboxClicked('email')" [checked]="setCheckbox('email', emailCheckbox)"
+					formControlName="emailCheckbox" />
+				<label class="control-label checkbox-inline" for="email">Email </label>
+				<input class="form-control" name="email" id="email" type="text" maxlength="30" formControlName="email"
+					[attr.disabled]="!emailCheckbox?.value ? '' : null" />
+				<div *ngIf="email?.invalid && (submitted || email?.touched)">
+					<div class="validation-text" *ngIf="email?.errors?.email">
+						Email must be of standard email format i.e. name@domain.com
+					</div>
+					<div class="validation-text" *ngIf="email?.errors?.maxLength">
+						Email name must be 30 characters or less.
+					</div>
+				</div>
+			</div>
+			<div class="form-group col-md-6 col-sm-12">
+				<input class="form-check-input" name="phoneNumberCheckbox" id="phoneNumberCheckbox" type="checkbox"
+					(click)="checkboxClicked('phone')" [checked]="setCheckbox('phone', phoneNumberCheckbox)"
+					[checked]="boxChecked === 'phone'" formControlName="phoneNumberCheckbox" />
+				<label class="control-label checkbox-inline" for="phoneNumber">Phone Number</label>
+				<input class="form-control" name="phoneNumber" id="phoneNumber" type="text" maxlength="13"
+					formControlName="phoneNumber" [attr.disabled]="!phoneNumberCheckbox?.value ? '' : null"
+					value="{{ phoneNumber?.value | phoneNumber }}" />
+
+				<div *ngIf="phoneNumber?.invalid && (submitted || phoneNumber?.touched)">
+					<div class="validation-text" *ngIf="phoneNumber?.errors?.pattern">
+						Phone number must be of the format (xxx)xxx-xxxx.
+					</div>
+					<div class="validation-text" *ngIf="phoneNumber?.errors?.maxLength">
+						Phone number must be 30 characters or less.
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" *ngIf="userFormGroup?.errors && submitted">
+			<div class="validation-text" *ngIf="userFormGroup?.errors?.contactPrefernce">
+				You must select a notification preference.
+			</div>
+			<div class="validation-text" *ngIf="userFormGroup?.errors?.emailRequired">
+				You must provide an email if you have selected email as your
+				notification preference.
+			</div>
+			<div class="validation-text" *ngIf="userFormGroup?.errors?.phoneRequired">
+				You must provide a phone number if you have selected phone number as
+				your notification preference.
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-md-6 col-sm-12">
+				<label class="control-label" for="supervisor">Supervisor *
+					<select class="form-control" name="supervisor" id="supervisor" placeholder="val val val"
+						formControlName="supervisor">
+						<option value="null" [disabled]="true">Select...</option>
+						<ng-container *ngFor="let supervisor of supervisors">
+							<option value="supervisor">{{ supervisor }}</option>
+						</ng-container>
+					</select>
+				</label>
+				<div *ngIf="supervisor?.invalid && (submitted || supervisor?.touched)">
+					<div class="validation-text" *ngIf="supervisor?.errors?.required">
+						Supervisor is required.
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row justify-content-center">
+			<div class="col">
+				<button class="btn btn-primary" type="submit">Submit</button>
+			</div>
+		</div>
+	</div>
+</form>
