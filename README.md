@@ -7,5 +7,7 @@ In order to run this Angular Client, you will need to have the following install
 
 After you have cloned the repository, navigate to the root install directory of the repository and run the following commands.
 
-```npm install
-ng serve```
+```
+npm install
+ng serve
+```
