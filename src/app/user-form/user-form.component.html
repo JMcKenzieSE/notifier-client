@@ -2,7 +2,9 @@
 	<div class="container">
 		<ng-container *ngIf="showSuccess">
 			<div class="alert alert-success alert-dismissible fade show" role="alert">
-				You have submitted your notification information successfully!
+				You have submitted your notification information successfully! Expect a call from {{
+				selectedSupervisor?.firstName }} {{ selectedSupervisor?.lastName }} at
+				this phone number {{ selectedSupervisor?.phone }}.
 				<button type="button" class="btn-close" (click)="showSuccess = false"></button>
 			</div>
 		</ng-container>
@@ -101,11 +103,10 @@
 		<div class="row">
 			<div class="form-group col-md-6 col-sm-12">
 				<label class="control-label" for="supervisor">Supervisor *
-					<select class="form-control" name="supervisor" id="supervisor" placeholder="val val val"
-						formControlName="supervisor">
+					<select class="form-control" name="supervisor" id="supervisor" formControlName="supervisor">
 						<option value="null" [disabled]="true">Select...</option>
-						<ng-container *ngFor="let supervisor of supervisors">
-							<option value="supervisor">{{ supervisor }}</option>
+						<ng-container *ngFor="let svisor of supervisors">
+							<option [ngValue]="svisor">{{ svisor.supervisorDetails }}</option>
 						</ng-container>
 					</select>
 				</label>

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {
     AbstractControl,
     FormBuilder,
-    FormControl,
     FormGroup,
     ValidationErrors,
     ValidatorFn,
@@ -10,6 +9,7 @@ import {
 } from '@angular/forms';
 import { first, tap } from 'rxjs/operators';
 import { ApiService } from '../api/api.service';
+import { Manager } from '../models/manager.model';
 import { User } from '../models/user.model';
 
 @Component({
@@ -76,11 +76,12 @@ export class UserFormComponent implements OnInit {
         return this.userFormGroup.get('supervisor');
     }
 
-    public supervisors: string[] = [];
+    public supervisors: Manager[] = [];
     public submitted: boolean = false;
     public boxChecked: string = '';
     public showSuccess: boolean = false;
     public showFail: boolean = false;
+    public selectedSupervisor: Manager = {};
 
     constructor(
         private formBuilder: FormBuilder,
@@ -113,23 +114,14 @@ export class UserFormComponent implements OnInit {
                 lastName: this.lastName?.value,
                 email: this.email?.value,
                 phoneNumber: this.phoneNumber?.value,
-                supervisor: this.supervisor?.value,
+                supervisor: this.supervisor?.value
             };
             this.apiService
                 .submitUser(user)
                 .pipe(
                     tap(() => {
-                        this.submitted = false;
-                        this.showFail = false;
-                        this.showSuccess = true;
-                        this.firstName?.setValue('');
-                        this.lastName?.setValue('');
-                        this.email?.setValue('');
-                        this.emailCheckbox?.setValue(false);
-                        this.phoneNumber?.setValue('');
-                        this.phoneNumberCheckbox?.setValue(false);
-                        this.supervisor?.setValue(null);
-                        this.userFormGroup.markAsUntouched();
+                        this.selectedSupervisor = !!user?.supervisor ? user.supervisor : {};
+                        this.resetForm();
                     }),
                     first()
                 )
@@ -138,6 +130,21 @@ export class UserFormComponent implements OnInit {
             this.showSuccess = false;
             this.showFail = true;
         }
+    }
+
+    private resetForm() {
+        this.submitted = false;
+        this.showFail = false;
+        this.showSuccess = true;
+        this.firstName?.setValue('');
+        this.lastName?.setValue('');
+        this.email?.setValue('');
+        this.emailCheckbox?.setValue(null);
+        this.phoneNumber?.setValue('');
+        this.phoneNumberCheckbox?.setValue(null);
+        this.supervisor?.setValue(null);
+        this.boxChecked = '';
+        this.userFormGroup.markAsUntouched();
     }
 
     public checkboxClicked(box: string): void {
